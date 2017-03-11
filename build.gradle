@@ -1,0 +1,61 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.6.+'
+    }
+}
+
+apply plugin: 'android'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://github.com/dahlgren/vpi-aar/raw/master"
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:13.0.0'
+    compile 'com.viewpagerindicator:library:2.4.2-SNAPSHOT'
+}
+
+android {
+
+    compileSdkVersion 17
+    buildToolsVersion '17'
+
+    defaultConfig {
+        minSdkVersion 8
+        targetSdkVersion 17
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            aidl.srcDirs = ['src']
+        }
+    }
+
+    buildTypes {
+        debug {
+            packageNameSuffix ".debug"
+        }
+    }
+
+    aaptOptions {
+        ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
+    }
+
+    tasks.withType(com.android.build.gradle.tasks.PackageApplication) {
+        pkgTask -> pkgTask.jniDir new File(projectDir, 'libs')
+    }
+
+    tasks.withType(Compile) {
+        options.encoding = "UTF-8"
+    }
+}
